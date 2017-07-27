@@ -13,8 +13,8 @@ public class PlayerController : MonoBehaviour {
     public AudioClip dyingSound;
     public float audioVolume = 0.5f;
     public Sprite[] playerSprites;
-
-    private HealthController healthController;
+    
+    private LifeBar lifeBar;
     private float minPosX;
 	private float maxPosX;
 	
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {	
 		DetectGameSpace();
-        healthController = GameObject.Find("Health").GetComponent<HealthController>();
+        lifeBar = GameObject.FindObjectOfType<LifeBar>();
     }
 	
 	void Fire() {
@@ -52,8 +52,8 @@ public class PlayerController : MonoBehaviour {
             LoadSprites(0);
         } 
 
-            // pour restreindre la position du joueur dans la zone de jeu
-            float newX = Mathf.Clamp(transform.position.x, minPosX, maxPosX);		
+        // pour restreindre la position du joueur dans la zone de jeu
+        float newX = Mathf.Clamp(transform.position.x, minPosX, maxPosX);		
 		transform.position = new Vector3(newX, transform.position.y, transform.position.z);		
 	}
 	
@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour {
 		
 		if(projectile) {
 			health -= projectile.GetDamage();
-            healthController.Damage(projectile.GetDamage());
+            lifeBar.LoseLife();
 			projectile.Hit();
 			if (health <= 0) {
 				Die();	
@@ -99,6 +99,5 @@ public class PlayerController : MonoBehaviour {
         } else {
             Debug.LogError("No Sprite to render. Brick sprite missing.");
         }
-    }
-    
+    }    
 }

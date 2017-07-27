@@ -94,6 +94,4 @@ public class FormationController : MonoBehaviour {
 		minPosX = leftBoundary.x + padding;
 		maxPosX = rightBoundary.x - padding;		
 	}
-
-
 }
