@@ -8,21 +8,22 @@ public class PlayerController : MonoBehaviour {
     public GameObject projectile;
     public float projectileSpeed;
     public float firingRate = 0.2f;
-    public float health;
+    public float health = 250f;
     public AudioClip projectileSound;
     public AudioClip dyingSound;
     public float audioVolume = 0.5f;
     public Sprite[] playerSprites;
 
-	
-	private float minPosX;
+    private HealthController healthController;
+    private float minPosX;
 	private float maxPosX;
 	
 
 	// Use this for initialization
 	void Start () {	
 		DetectGameSpace();
-	}
+        healthController = GameObject.Find("Health").GetComponent<HealthController>();
+    }
 	
 	void Fire() {
         GameObject projectile = Instantiate(this.projectile, transform.position, Quaternion.identity) as GameObject;		
@@ -77,6 +78,7 @@ public class PlayerController : MonoBehaviour {
 		
 		if(projectile) {
 			health -= projectile.GetDamage();
+            healthController.Damage(projectile.GetDamage());
 			projectile.Hit();
 			if (health <= 0) {
 				Die();	
@@ -98,4 +100,5 @@ public class PlayerController : MonoBehaviour {
             Debug.LogError("No Sprite to render. Brick sprite missing.");
         }
     }
+    
 }
