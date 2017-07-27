@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MusicPlayer : MonoBehaviour {
 	static MusicPlayer instance = null;
@@ -17,18 +18,19 @@ public class MusicPlayer : MonoBehaviour {
 		} else {
 			instance = this;
 			GameObject.DontDestroyOnLoad(gameObject);
-			music = GetComponent<AudioSource>();
+            SceneManager.sceneLoaded += this.OnLevelFinishedLoading;
+            music = GetComponent<AudioSource>();
 			music.clip = startClip;
 			music.loop = true;
 			music.Play();
 		}		
 	}
 	
-	void OnLevelWasLoaded(int level) {
-		Debug.Log("MusicPlayer Loaded level " + level);
+	void OnLevelFinishedLoading(Scene scene, LoadSceneMode sceneMode) {
+		Debug.Log("MusicPlayer Loaded level " + scene.buildIndex);
 		music.Stop();
 		
-		switch(level) {
+		switch(scene.buildIndex) {
 			case 0:
 				music.clip = startClip;
 				break;
