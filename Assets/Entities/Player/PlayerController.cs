@@ -2,16 +2,18 @@
 using System.Collections;
 
 public class PlayerController : MonoBehaviour {
-	
-	public float shipSpeed = 15f;
-	public float padding = 1;
-	public GameObject projectile;
-	public float projectileSpeed;
-	public float firingRate = 0.2f;
-	public float health;
-	public AudioClip laserSound;
-	public AudioClip dyingSound;
-	public float audioVolume = 0.5f;
+
+    public float shipSpeed = 15f;
+    public float padding = 1;
+    public GameObject projectile;
+    public float projectileSpeed;
+    public float firingRate = 0.2f;
+    public float health;
+    public AudioClip projectileSound;
+    public AudioClip dyingSound;
+    public float audioVolume = 0.5f;
+    public Sprite[] playerSprites;
+
 	
 	private float minPosX;
 	private float maxPosX;
@@ -25,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 	void Fire() {
         GameObject projectile = Instantiate(this.projectile, transform.position, Quaternion.identity) as GameObject;		
 		projectile.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);		
-		//AudioSource.PlayClipAtPoint(laserSound, transform.position, audioVolume);		
+		AudioSource.PlayClipAtPoint(projectileSound, transform.position, audioVolume);		
 	}
 	
 	// Update is called once per frame
@@ -38,14 +40,19 @@ public class PlayerController : MonoBehaviour {
 			CancelInvoke("Fire");
 		}
 		
-		if (Input.GetKey(KeyCode.LeftArrow)) {			
-			transform.position += Vector3.left * shipSpeed * Time.deltaTime;			
-		} else if (Input.GetKey(KeyCode.RightArrow)) {		
-			transform.position += Vector3.right * shipSpeed * Time.deltaTime;		
-		}	
-		
-		// pour restreindre la position du joueur dans la zone de jeu
-		float newX = Mathf.Clamp(transform.position.x, minPosX, maxPosX);		
+		if (Input.GetKey(KeyCode.LeftArrow)) {
+            LoadSprites(2);
+			transform.position += Vector3.left * shipSpeed * Time.deltaTime;            
+		} else if (Input.GetKey(KeyCode.RightArrow)) {
+            LoadSprites(1);
+            transform.position += Vector3.right * shipSpeed * Time.deltaTime;		
+		}
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || (Input.GetKeyUp(KeyCode.RightArrow))) {
+            LoadSprites(0);
+        } 
+
+            // pour restreindre la position du joueur dans la zone de jeu
+            float newX = Mathf.Clamp(transform.position.x, minPosX, maxPosX);		
 		transform.position = new Vector3(newX, transform.position.y, transform.position.z);		
 	}
 	
@@ -79,8 +86,16 @@ public class PlayerController : MonoBehaviour {
 	
 	void Die() {
 		Destroy(gameObject);
-		AudioSource.PlayClipAtPoint(laserSound, transform.position, audioVolume);
+		AudioSource.PlayClipAtPoint(projectileSound, transform.position, audioVolume);
 		LevelManager levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 		levelManager.LoadLevel("Win Screen");
 	}
+
+    void LoadSprites(int index) {
+        if (playerSprites[index]) {
+            this.GetComponent<SpriteRenderer>().sprite = playerSprites[index];
+        } else {
+            Debug.LogError("No Sprite to render. Brick sprite missing.");
+        }
+    }
 }

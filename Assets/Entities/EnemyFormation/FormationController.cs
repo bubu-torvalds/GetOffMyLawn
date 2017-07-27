@@ -9,9 +9,8 @@ public class FormationController : MonoBehaviour {
 	public GameObject enemyPrefab;
 	public float padding = 1;
 	public float spawnDelay = 0.5f;
-	
-	
-	private float minPosX;
+
+    private float minPosX;
 	private float maxPosX;
 	private bool movingRight = true;
 	
@@ -95,4 +94,6 @@ public class FormationController : MonoBehaviour {
 		minPosX = leftBoundary.x + padding;
 		maxPosX = rightBoundary.x - padding;		
 	}
+
+
 }

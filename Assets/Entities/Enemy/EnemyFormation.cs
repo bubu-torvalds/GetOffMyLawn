@@ -7,12 +7,13 @@ public class EnemyFormation : MonoBehaviour {
 	public GameObject projectile;
 	public float projectileSpeed;
 	public float shotsPerSeconds = 0.5f;
+    public int spritePerSeconds = 1;
 	public int scoreValue = 150;
 	public AudioClip laserSound;
 	public AudioClip destroySound;
 	public float audioVolume = 0.5f;
-	
-	private ScoreKeeper scoreKeeper;
+
+    private ScoreKeeper scoreKeeper;
 	
 	void Start() {
 		scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();
@@ -47,9 +48,9 @@ public class EnemyFormation : MonoBehaviour {
 	}
 	
 	void Update() {	
-		float probability = Time.deltaTime * shotsPerSeconds;
-		if (Random.value < probability) {
+		float fireProbability = Time.deltaTime * shotsPerSeconds;
+		if (Random.value < fireProbability) {
 			Fire ();
-		}
-	}	
+		}       
+    }   
 }
