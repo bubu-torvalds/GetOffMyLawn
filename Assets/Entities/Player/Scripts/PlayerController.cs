@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-    public float shipSpeed = 15f;
+    public float shipSpeed = 50000f;
     public float padding = 1;
     public GameObject projectile;
     public float projectileSpeed;
@@ -15,24 +15,34 @@ public class PlayerController : MonoBehaviour {
     public Sprite[] playerSprites;
     
     private LifeBar lifeBar;
+    private Animator animator;
     private float minPosX;
 	private float maxPosX;
+
+    //animation states
+    const int STATE_IDLE = 0;
+    const int STATE_WALK_RIGHT = 1;
+    const int STATE_WALK_LEFT = 2;
+
+    int currentAnimationState = STATE_IDLE;
 	
 
 	// Use this for initialization
 	void Start () {	
+        
 		DetectGameSpace();
         lifeBar = GameObject.FindObjectOfType<LifeBar>();
+        animator = this.GetComponentInChildren<Animator>();
     }
 	
 	void Fire() {
         GameObject projectile = Instantiate(this.projectile, transform.position, Quaternion.identity) as GameObject;		
-		projectile.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);		
+		projectile.GetComponentInChildren<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);		
 		AudioSource.PlayClipAtPoint(projectileSound, transform.position, audioVolume);		
 	}
 	
 	// Update is called once per frame
-	void Update () {	
+	void FixedUpdate () {	
 		if (Input.GetKeyDown(KeyCode.Space)) {		
 			InvokeRepeating("Fire", 0.000001f, firingRate); 			
 		} 
@@ -41,16 +51,19 @@ public class PlayerController : MonoBehaviour {
 			CancelInvoke("Fire");
 		}
 		
-		if (Input.GetKey(KeyCode.LeftArrow)) {
-            LoadSprites(2);
-			transform.position += Vector3.left * shipSpeed * Time.deltaTime;            
-		} else if (Input.GetKey(KeyCode.RightArrow)) {
-            LoadSprites(1);
-            transform.position += Vector3.right * shipSpeed * Time.deltaTime;		
-		}
-        if (Input.GetKeyUp(KeyCode.LeftArrow) || (Input.GetKeyUp(KeyCode.RightArrow))) {
-            LoadSprites(0);
-        } 
+        if (Input.GetKeyUp(KeyCode.LeftArrow) || (Input.GetKeyUp(KeyCode.RightArrow))) {            
+            changeState(STATE_IDLE);
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            changeState(STATE_WALK_LEFT);
+            transform.Translate(Vector3.left * shipSpeed * Time.deltaTime);
+
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
+            changeState(STATE_WALK_RIGHT);
+            transform.Translate(Vector3.right * shipSpeed * Time.deltaTime);
+        }
+
 
         // pour restreindre la position du joueur dans la zone de jeu
         float newX = Mathf.Clamp(transform.position.x, minPosX, maxPosX);		
@@ -77,7 +90,7 @@ public class PlayerController : MonoBehaviour {
 		Projectile projectile = col.gameObject.GetComponent<Projectile>();
 		
 		if(projectile) {
-			health -= projectile.GetDamage();
+            health -= projectile.GetDamage();
             lifeBar.LoseLife();
 			projectile.Hit();
 			if (health <= 0) {
@@ -99,5 +112,32 @@ public class PlayerController : MonoBehaviour {
         } else {
             Debug.LogError("No Sprite to render. Brick sprite missing.");
         }
-    }    
+    }   
+    
+    void changeState(int state) {
+        if (currentAnimationState == state)
+            return;
+
+        switch (state) {
+
+            case STATE_WALK_LEFT:
+                animator.SetInteger("state", STATE_WALK_LEFT);
+                break;
+
+            case STATE_WALK_RIGHT:
+                animator.SetInteger("state", STATE_WALK_RIGHT);
+                break;
+
+            case STATE_IDLE:
+                animator.SetInteger("state", STATE_IDLE);
+                break;
+
+        }
+
+        currentAnimationState = state;
+    }
+
+    void OnDrawGizmos() {
+        Gizmos.DrawWireSphere(transform.position, 1);
+    }
 }
