@@ -74,7 +74,9 @@ public class PlayerController : MonoBehaviour {
 		
 		if(projectile) {
             health -= projectile.GetDamage();
-            lifeBar.LoseLife();
+            if (health > 0) {
+                lifeBar.LoseLife();
+            }
 			projectile.Hit();
 			if (health <= 0) {
 				Die();	
