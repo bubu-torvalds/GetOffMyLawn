@@ -64,26 +64,9 @@ public class PlayerController : MonoBehaviour {
             transform.Translate(Vector3.right * shipSpeed * Time.deltaTime);
         }
 
-
         // pour restreindre la position du joueur dans la zone de jeu
         float newX = Mathf.Clamp(transform.position.x, minPosX, maxPosX);		
 		transform.position = new Vector3(newX, transform.position.y, transform.position.z);		
-	}
-	
-	void DetectGameSpace() {	
-		Camera mainCamera = Camera.main;
-		
-		// distance en Z de la camera au gameobject du joueur
-		float distance = transform.position.z - mainCamera.transform.position.z;		
-		
-		// Position en bas à gauche de la zone de jeu
-		Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distance));
-		
-		// Position en bas à droite de la zone de jeu
-		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distance));
-		
-		minPosX = leftBoundary.x + padding;
-		maxPosX = rightBoundary.x - padding;		
 	}
 	
 	void OnTriggerEnter2D(Collider2D col) {	
@@ -104,15 +87,7 @@ public class PlayerController : MonoBehaviour {
 		AudioSource.PlayClipAtPoint(projectileSound, transform.position, audioVolume);
 		LevelManager levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
 		levelManager.LoadLevel("Win Screen");
-	}
-
-    void LoadSprites(int index) {
-        if (playerSprites[index]) {
-            this.GetComponent<SpriteRenderer>().sprite = playerSprites[index];
-        } else {
-            Debug.LogError("No Sprite to render. Brick sprite missing.");
-        }
-    }   
+	} 
     
     void changeState(int state) {
         if (currentAnimationState == state)
@@ -139,5 +114,21 @@ public class PlayerController : MonoBehaviour {
 
     void OnDrawGizmos() {
         Gizmos.DrawWireSphere(transform.position, 1);
+    }
+
+    void DetectGameSpace() {
+        Camera mainCamera = Camera.main;
+
+        // distance en Z de la camera au gameobject du joueur
+        float distance = transform.position.z - mainCamera.transform.position.z;
+
+        // Position en bas à gauche de la zone de jeu
+        Vector3 leftBoundary = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance));
+
+        // Position en bas à droite de la zone de jeu
+        Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance));
+
+        minPosX = leftBoundary.x + padding;
+        maxPosX = rightBoundary.x - padding;
     }
 }

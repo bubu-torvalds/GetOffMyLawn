@@ -6,19 +6,23 @@ public class FormationController : MonoBehaviour {
 	public float width = 10f;
 	public float height = 5f;
 	public float enemySpeed = 5f;
-	public GameObject enemyPrefab;
+	public GameObject[] enemyPrefab;
 	public float padding = 1;
 	public float spawnDelay = 0.5f;
 
     private float minPosX;
 	private float maxPosX;
 	private bool movingRight = true;
-	
+    private GameObject defaultEnemyPrefab;
+    private ScoreKeeper scoreKeeper;
 
-	// Use this for initialization
-	void Start () {		
-		DetectGameSpace();		
-		SpawnUntilFull();		
+    // Use this for initialization
+    void Start () {
+
+        scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();
+        DetectGameSpace();
+        defaultEnemyPrefab = enemyPrefab[0];
+        SpawnUntilFull();		
 	}
 	
 	public void OnDrawGizmos() {
@@ -40,21 +44,30 @@ public class FormationController : MonoBehaviour {
 			movingRight = true;
 		} else if (rightFormationEdge > maxPosX) {
 			movingRight = false;
-		}		
-		
+		} 
+        
 		if (AllMembersDead()) {
 			SpawnUntilFull();
 		}
 	
 	}
 	
-	void SpawnUntilFull() {	
-		Transform freePosition = NextFreePosition();
+	void SpawnUntilFull() {
+
+        if (scoreKeeper.GetScore() > 1000) {
+            defaultEnemyPrefab = enemyPrefab[1];
+            
+        }
+
+        Transform freePosition = NextFreePosition();
 		if (freePosition) {
-			GameObject enemy = Instantiate(enemyPrefab, freePosition.position, Quaternion.identity) as GameObject;
+			GameObject enemy = Instantiate(defaultEnemyPrefab, freePosition.position, Quaternion.identity) as GameObject;
 			// on l'attache à enemyFormation
 			enemy.transform.parent = freePosition;
-		}
+            Animator animator = enemy.GetComponent<Animator>();
+            animator.SetTrigger("Go");
+
+        }
 		if (NextFreePosition()) {
 			Invoke("SpawnUntilFull", spawnDelay);
 		}
