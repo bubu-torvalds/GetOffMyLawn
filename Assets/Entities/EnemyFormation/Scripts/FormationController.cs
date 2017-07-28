@@ -58,8 +58,10 @@ public class FormationController : MonoBehaviour {
             defaultEnemyPrefab = enemyPrefab[1];            
         } else if (scoreKeeper.GetScore() > 2000) {
             defaultEnemyPrefab = enemyPrefab[2];
+            Debug.Log(defaultEnemyPrefab.GetComponent<SpriteRenderer>().sprite);
         } else if (scoreKeeper.GetScore() > 3000) {
             defaultEnemyPrefab = enemyPrefab[3];
+            Debug.Log(defaultEnemyPrefab.GetComponent<SpriteRenderer>().sprite);
         }
 
         Transform freePosition = NextFreePosition();
@@ -68,8 +70,9 @@ public class FormationController : MonoBehaviour {
 			// on l'attache à enemyFormation
 			enemy.transform.parent = freePosition;
             Animator animator = enemy.GetComponent<Animator>();
-            animator.SetTrigger("Go");
-
+            if (defaultEnemyPrefab.GetComponent<SpriteRenderer>().sprite.name != "PandaMaru_MV_Birds_recolor_by_McSundae_0") {
+                animator.SetTrigger("Go");
+            }         
         }
 		if (NextFreePosition()) {
 			Invoke("SpawnUntilFull", spawnDelay);
