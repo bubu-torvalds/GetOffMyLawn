@@ -6,7 +6,7 @@ public class EnemyFormation : MonoBehaviour {
 	public float health = 150f;
 	public GameObject projectile;
 	public float projectileSpeed;
-	public float shotsPerSeconds = 0.5f;
+	public float shotsPerSeconds = 1f;
     public int spritePerSeconds = 1;
 	public int scoreValue = 150;
 	public AudioClip laserSound;

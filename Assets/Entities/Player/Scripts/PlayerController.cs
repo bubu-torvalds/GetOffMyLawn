@@ -44,7 +44,8 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {	
 		if (Input.GetKeyDown(KeyCode.Space)) {		
-			InvokeRepeating("Fire", 0.000001f, firingRate); 			
+			//InvokeRepeating("Fire", 0.001f, firingRate);
+            Invoke("Fire", 0.001f);
 		} 
 		
 		if (Input.GetKeyUp(KeyCode.Space)) {
@@ -73,6 +74,7 @@ public class PlayerController : MonoBehaviour {
 		Projectile projectile = col.gameObject.GetComponent<Projectile>();
 		
 		if(projectile) {
+            AudioSource.PlayClipAtPoint(dyingSound, transform.position, audioVolume);
             health -= projectile.GetDamage();
             if (health > 0) {
                 lifeBar.LoseLife();
@@ -86,9 +88,9 @@ public class PlayerController : MonoBehaviour {
 	
 	void Die() {
 		Destroy(gameObject);
-		AudioSource.PlayClipAtPoint(projectileSound, transform.position, audioVolume);
+		AudioSource.PlayClipAtPoint(dyingSound, transform.position, audioVolume);
 		LevelManager levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-		levelManager.LoadLevel("Win Screen");
+		levelManager.LoadLevel("Lose Screen");
 	} 
     
     void changeState(int state) {
