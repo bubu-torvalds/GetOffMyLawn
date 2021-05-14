@@ -54,7 +54,7 @@ public class FormationController : MonoBehaviour {
 	
 	void SpawnUntilFull() {
 
-        if (scoreKeeper.GetScore() > 1000) {
+        /*if (scoreKeeper.GetScore() > 1000) {
             defaultEnemyPrefab = enemyPrefab[1];            
         } else if (scoreKeeper.GetScore() > 2000) {
             defaultEnemyPrefab = enemyPrefab[2];
@@ -62,7 +62,7 @@ public class FormationController : MonoBehaviour {
         } else if (scoreKeeper.GetScore() > 3000) {
             defaultEnemyPrefab = enemyPrefab[3];
             Debug.Log(defaultEnemyPrefab.GetComponent<SpriteRenderer>().sprite);
-        }
+        }*/
 
         Transform freePosition = NextFreePosition();
 		if (freePosition) {
