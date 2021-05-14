@@ -89,11 +89,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
     void Die() {
-        Debug.Log("Player dies: ");
         Destroy(gameObject);
         AudioSource.PlayClipAtPoint(dyingSound, transform.position, audioVolume);
         LevelManager levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-        ScoreKeeper scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();
         AddScore(ScoreKeeper.score);
         if (win) {
             levelManager.LoadLevel("Win Screen");
@@ -109,18 +107,14 @@ public class PlayerController : MonoBehaviour {
             if (PlayerPrefs.GetInt("HScore") < newScore) {
                 oldScore = PlayerPrefs.GetInt("HScore");
                 PlayerPrefs.SetInt("HScore", newScore);
-                Debug.Log("PlayerPrefs.GetInt < newScore: " + PlayerPrefs.GetInt("HScore") + " " + newScore);
                 newScore = oldScore;
                 win = true;
             } else {
-                //PlayerPrefs.SetInt("HScore", newScore);
-                Debug.Log("PlayerPrefs.GetInt >= newScore: " + PlayerPrefs.GetInt("HScore") + " " + newScore);
                 newScore = 0;
             }
         } else {
             Debug.Log("!PlayerPrefs.HasKey: " + newScore);
             PlayerPrefs.SetInt("HScore", newScore);
-            Debug.Log("PlayerPrefs.GetInt: " + PlayerPrefs.GetInt("HScore"));
             win = true;
         }
     }
