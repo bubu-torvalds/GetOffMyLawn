@@ -113,7 +113,6 @@ public class PlayerController : MonoBehaviour {
                 newScore = 0;
             }
         } else {
-            Debug.Log("!PlayerPrefs.HasKey: " + newScore);
             PlayerPrefs.SetInt("HScore", newScore);
             win = true;
         }
