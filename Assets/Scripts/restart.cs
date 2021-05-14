@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class restart : MonoBehaviour {
+public class Restart : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -13,7 +13,7 @@ public class restart : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Return)) {
-            SceneManager.LoadScene("Start Menu");
+            SceneManager.LoadScene("Splash Screen");
         }
     }
 }

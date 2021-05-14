@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour {
     public AudioClip dyingSound;
     public float audioVolume = 0.5f;
     public Sprite[] playerSprites;
-    
+
     private LifeBar lifeBar;
     private Animator animator;
     private float minPosX;
 	private float maxPosX;
+
+    private bool win = false;
 
     //animation states
     const int STATE_IDLE = 0;
@@ -85,14 +87,44 @@ public class PlayerController : MonoBehaviour {
 			}			
 		}
 	}
-	
-	void Die() {
-		Destroy(gameObject);
-		AudioSource.PlayClipAtPoint(dyingSound, transform.position, audioVolume);
-		LevelManager levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-		levelManager.LoadLevel("Lose Screen");
-	} 
-    
+
+    void Die() {
+        Debug.Log("Player dies: ");
+        Destroy(gameObject);
+        AudioSource.PlayClipAtPoint(dyingSound, transform.position, audioVolume);
+        LevelManager levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        ScoreKeeper scoreKeeper = GameObject.Find("Score").GetComponent<ScoreKeeper>();
+        AddScore(ScoreKeeper.score);
+        if (win) {
+            levelManager.LoadLevel("Win Screen");
+        } else {
+            levelManager.LoadLevel("Lose Screen");
+        }
+    }
+
+    void AddScore(int score) {
+        int newScore = score;
+        int oldScore;
+        if (PlayerPrefs.HasKey("HScore")) {
+            if (PlayerPrefs.GetInt("HScore") < newScore) {
+                oldScore = PlayerPrefs.GetInt("HScore");
+                PlayerPrefs.SetInt("HScore", newScore);
+                Debug.Log("PlayerPrefs.GetInt < newScore: " + PlayerPrefs.GetInt("HScore") + " " + newScore);
+                newScore = oldScore;
+                win = true;
+            } else {
+                //PlayerPrefs.SetInt("HScore", newScore);
+                Debug.Log("PlayerPrefs.GetInt >= newScore: " + PlayerPrefs.GetInt("HScore") + " " + newScore);
+                newScore = 0;
+            }
+        } else {
+            Debug.Log("!PlayerPrefs.HasKey: " + newScore);
+            PlayerPrefs.SetInt("HScore", newScore);
+            Debug.Log("PlayerPrefs.GetInt: " + PlayerPrefs.GetInt("HScore"));
+            win = true;
+        }
+    }
+
     void changeState(int state) {
         if (currentAnimationState == state)
             return;

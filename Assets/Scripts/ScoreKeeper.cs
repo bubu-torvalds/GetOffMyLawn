@@ -27,5 +27,5 @@ public class ScoreKeeper : MonoBehaviour {
     public int GetScore() {
         return score;
     }
-	
+
 }

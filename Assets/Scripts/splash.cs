@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class splash : MonoBehaviour {
+public class Splash : MonoBehaviour {
 
     SpriteRenderer spriteRenderer;
     AudioSource music;
@@ -18,7 +18,7 @@ public class splash : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.anyKeyDown) {
+        if (Input.GetKeyDown(KeyCode.Return)) {
             music = GetComponent<AudioSource>();
             music.loop = true;
             music.Play();
