@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour {
     public GameObject projectile;
     public float projectileSpeed;
     public float firingRate = 0.2f;
-    public float health = 250f;
+    public float health = 400f;
     public AudioClip projectileSound;
     public AudioClip dyingSound;
     public float audioVolume = 0.5f;
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour {
                 lifeBar.LoseLife();
             }
 			projectile.Hit();
-			if (health <= 0) {
+			if (health <= 100) {
 				Die();	
 			}			
 		}

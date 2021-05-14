@@ -31,6 +31,7 @@ public class LifeBar : MonoBehaviour {
             }
         }
         Destroy(lifeBarPrefabs[size - 1]);
+        //Destroy(lifeBarPrefabs[size]);
 
     }
 
